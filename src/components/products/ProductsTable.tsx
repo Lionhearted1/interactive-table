@@ -17,7 +17,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Eye } from 'lucide-react';
+import { ProductDetails } from './ProductDetails';
+import { Product } from '@/types/product';
 
 const ITEMS_PER_PAGE_OPTIONS = [10, 20, 30];
 
@@ -25,6 +27,7 @@ export function ProductsTable() {
   const { data, isLoading, error } = useProducts();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -78,6 +81,7 @@ export function ProductsTable() {
               <TableHead>Price</TableHead>
               <TableHead>Stock</TableHead>
               <TableHead>Rating</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -95,6 +99,16 @@ export function ProductsTable() {
                 <TableCell>${product.price.toFixed(2)}</TableCell>
                 <TableCell>{product.stock}</TableCell>
                 <TableCell>{product.rating.toFixed(1)}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setSelectedProduct(product)}
+                  >
+                    <Eye className="h-4 w-4" />
+                    <span className="sr-only">View details</span>
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -126,6 +140,13 @@ export function ProductsTable() {
           </Button>
         </div>
       </div>
+      {selectedProduct && (
+        <ProductDetails
+          product={selectedProduct}
+          open={!!selectedProduct}
+          onOpenChange={(open) => !open && setSelectedProduct(null)}
+        />
+      )}
     </Card>
   );
 } 
