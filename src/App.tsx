@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FullScreenLoader } from './components/ui/FullScreenLoader';
+import { ProductsTable } from './components/products/ProductsTable';
 import "./App.css"
 
 function App() {
@@ -18,7 +19,7 @@ function App() {
     <div className="min-h-screen bg-background">
       <FullScreenLoader isLoading={isLoading} />
       <main className="container mx-auto p-4">
-        {/* Table component will go here */}
+        <ProductsTable />
       </main>
     </div>
   );
