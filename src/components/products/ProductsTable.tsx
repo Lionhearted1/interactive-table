@@ -73,15 +73,15 @@ export function ProductsTable() {
       </div>
       <div className="transition-all duration-300">
         <Table>
-          <TableHeader className="bg-secondary text-secondary-foreground">
-            <TableRow>
-              <TableHead className="font-bold">Image</TableHead>
-              <TableHead className="font-bold">Title</TableHead>
-              <TableHead className="font-bold">Category</TableHead>
-              <TableHead className="font-bold">Price</TableHead>
-              <TableHead className="font-bold">Stock</TableHead>
-              <TableHead className="font-bold">Rating</TableHead>
-              <TableHead className="font-bold">Actions</TableHead>
+          <TableHeader>
+            <TableRow className="table-header">
+              <TableHead className="w-[100px]">Image</TableHead>
+              <TableHead>Title</TableHead>
+              <TableHead>Price</TableHead>
+              <TableHead>Stock</TableHead>
+              <TableHead>Brand</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -95,10 +95,10 @@ export function ProductsTable() {
                   />
                 </TableCell>
                 <TableCell className="font-medium">{product.title}</TableCell>
-                <TableCell>{product.category}</TableCell>
                 <TableCell>${product.price.toFixed(2)}</TableCell>
                 <TableCell>{product.stock}</TableCell>
-                <TableCell>{product.rating.toFixed(1)}</TableCell>
+                <TableCell>{product.brand}</TableCell>
+                <TableCell>{product.category}</TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"

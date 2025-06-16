@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 
-type Theme = "dark" | "light";
-
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme>(() => {
+  const [theme, setTheme] = useState(() => {
     if (typeof window !== "undefined") {
-      return (localStorage.getItem("theme") as Theme) || "dark";
+      return localStorage.getItem("theme") || "dark";
     }
     return "dark";
   });
@@ -13,20 +11,25 @@ export function useTheme() {
   useEffect(() => {
     const root = window.document.documentElement;
     const body = window.document.body;
-    
+
     // Remove both classes first
     root.classList.remove("light", "dark");
     body.classList.remove("light", "dark");
-    
-    // Add the current theme class to both
+
+    // Add the current theme class
     root.classList.add(theme);
     body.classList.add(theme);
-    
+
     // Set data-theme attribute
     root.setAttribute("data-theme", theme);
-    
+
+    // Store theme in localStorage
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  return { theme, setTheme };
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+  };
+
+  return { theme, toggleTheme };
 } 
