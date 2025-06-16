@@ -1,76 +1,63 @@
 import { useState } from "react";
-import { cn } from "../lib/utils";
-import { ArrowUp, ArrowDown } from "lucide-react";
+import { SortField, SortOrder, SortConfig } from "@/types/sortConfig";
 
-export type SortField = "title" | "price" | "stock" | "rating";
-export type SortOrder = "asc" | "desc";
-
-interface SortConfig {
-  field: SortField;
-  order: SortOrder;
-}
-
-export function useSort(defaultField: SortField = "title") {
-  const [sortConfig, setSortConfig] = useState<SortConfig>({
-    field: defaultField,
-    order: "asc",
-  });
+export function useSort<T extends Record<string, any>>() {
+  const [sortConfigs, setSortConfigs] = useState<SortConfig[]>([]);
 
   const handleSort = (field: SortField) => {
-    setSortConfig((prev) => ({
-      field,
-      order: prev.field === field && prev.order === "asc" ? "desc" : "asc",
-    }));
+    setSortConfigs((prevConfigs) => {
+      const existingConfigIndex = prevConfigs.findIndex((config) => config.field === field);
+      const newConfigs = [...prevConfigs];
+
+      if (existingConfigIndex === -1) {
+        // Add new sort config at the beginning
+        newConfigs.unshift({ field, order: "asc" });
+      } else {
+        const currentConfig = newConfigs[existingConfigIndex];
+        if (currentConfig.order === "asc") {
+          // Toggle to desc
+          newConfigs[existingConfigIndex] = { ...currentConfig, order: "desc" };
+        } else {
+          // Remove the sort config
+          newConfigs.splice(existingConfigIndex, 1);
+        }
+      }
+
+      return newConfigs;
+    });
   };
 
   const getSortIcon = (field: SortField) => {
-    const isActive = sortConfig.field === field;
-    const isAscending = sortConfig.order === "asc";
-
-    return {
-      upArrow: (
-        <ArrowUp
-          className={cn(
-            "ml-2 h-4 w-4",
-            isActive && isAscending
-              ? "text-primary-foreground"
-              : "text-primary-foreground/50"
-          )}
-        />
-      ),
-      downArrow: (
-        <ArrowDown
-          className={cn(
-            "ml-2 h-4 w-4",
-            isActive && !isAscending
-              ? "text-primary-foreground"
-              : "text-primary-foreground/50"
-          )}
-        />
-      ),
-    };
+    const config = sortConfigs.find((c) => c.field === field);
+    if (!config) return "↕️";
+    return config.order === "asc" ? "↑" : "↓";
   };
 
-  const sortData = <T extends Record<string, any>>(data: T[]) => {
+  const sortData = (data: T[]): T[] => {
+    if (sortConfigs.length === 0) return data;
+
     return [...data].sort((a, b) => {
-      const multiplier = sortConfig.order === "asc" ? 1 : -1;
-      switch (sortConfig.field) {
-        case "title":
-          return multiplier * a.title.localeCompare(b.title);
-        case "price":
-          return multiplier * (a.price - b.price);
-        case "stock":
-          return multiplier * (a.stock - b.stock);
-        case "rating":
-          return multiplier * (a.rating - b.rating);
-        default:
-          return 0;
+      // Compare each sort config in order
+      for (const config of sortConfigs) {
+        const { field, order } = config;
+        const aValue = a[field];
+        const bValue = b[field];
+
+        // Handle null/undefined values
+        if (aValue == null && bValue == null) continue;
+        if (aValue == null) return order === "asc" ? -1 : 1;
+        if (bValue == null) return order === "asc" ? 1 : -1;
+
+        // Compare values
+        if (aValue < bValue) return order === "asc" ? -1 : 1;
+        if (aValue > bValue) return order === "asc" ? 1 : -1;
       }
+      return 0;
     });
   };
 
   return {
-    sortConfig,
+    sortConfigs,
     handleSort,
     getSortIcon,
     sortData,
