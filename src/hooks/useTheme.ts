@@ -22,6 +22,9 @@ export function useTheme() {
     root.classList.add(theme);
     body.classList.add(theme);
     
+    // Set data-theme attribute
+    root.setAttribute("data-theme", theme);
+    
     localStorage.setItem("theme", theme);
   }, [theme]);
 
