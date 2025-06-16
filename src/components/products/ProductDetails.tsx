@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Product } from '@/types/product';
 import {
   Dialog,
@@ -15,9 +16,11 @@ interface ProductDetailsProps {
 }
 
 export function ProductDetails({ product, open, onOpenChange }: ProductDetailsProps) {
+  const [mainImage, setMainImage] = useState(product.thumbnail);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="max-w-3xl bg-background">
         <DialogHeader>
           <DialogTitle>{product.title}</DialogTitle>
         </DialogHeader>
@@ -26,18 +29,25 @@ export function ProductDetails({ product, open, onOpenChange }: ProductDetailsPr
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-4">
                 <img
-                  src={product.thumbnail}
+                  src={mainImage}
                   alt={product.title}
                   className="aspect-square w-full rounded-lg object-cover"
                 />
                 <div className="grid grid-cols-4 gap-2">
-                  {product.images.map((image, index) => (
-                    <img
+                  {[product.thumbnail, ...product.images].map((image, index) => (
+                    <button
                       key={index}
-                      src={image}
-                      alt={`${product.title} ${index + 1}`}
-                      className="aspect-square rounded-md object-cover"
-                    />
+                      onClick={() => setMainImage(image)}
+                      className={`aspect-square rounded-md overflow-hidden transition-opacity hover:opacity-80 ${
+                        mainImage === image ? 'ring-2 ring-primary' : ''
+                      }`}
+                    >
+                      <img
+                        src={image}
+                        alt={`${product.title} ${index + 1}`}
+                        className="h-full w-full object-cover"
+                      />
+                    </button>
                   ))}
                 </div>
               </div>

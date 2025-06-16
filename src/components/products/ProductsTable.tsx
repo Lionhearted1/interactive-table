@@ -73,15 +73,15 @@ export function ProductsTable() {
       </div>
       <div className="transition-all duration-300">
         <Table>
-          <TableHeader className="bg-muted/50">
+          <TableHeader className="bg-secondary text-secondary-foreground">
             <TableRow>
-              <TableHead>Image</TableHead>
-              <TableHead>Title</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Stock</TableHead>
-              <TableHead>Rating</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead className="font-bold">Image</TableHead>
+              <TableHead className="font-bold">Title</TableHead>
+              <TableHead className="font-bold">Category</TableHead>
+              <TableHead className="font-bold">Price</TableHead>
+              <TableHead className="font-bold">Stock</TableHead>
+              <TableHead className="font-bold">Rating</TableHead>
+              <TableHead className="font-bold">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
