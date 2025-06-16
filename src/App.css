@@ -1,4 +1,5 @@
-@import "tailwindcss/preflight";
+@tailwind base;
+@tailwind components;
 @tailwind utilities;
 
 @layer base {
@@ -135,7 +136,7 @@
 
 /* Table styles */
 .table-header {
-  @apply bg-muted text-muted-foreground font-semibold;
+  @apply bg-primary bg-opacity-50 text-muted-foreground font-medium;
 }
 
 .table-row {
@@ -143,7 +144,20 @@
 }
 
 .table-row:hover {
-  @apply bg-muted/50;
+  @apply bg-muted bg-opacity-50;
+}
+
+/* Table header styles */
+[data-slot="table-header"] {
+  @apply bg-muted bg-opacity-50;
+}
+
+[data-slot="table-head"] {
+  @apply text-muted-foreground font-medium whitespace-nowrap;
+}
+
+[data-slot="table-head"] > div {
+  @apply flex items-center justify-between gap-2;
 }
 
 /* Button styles */
@@ -160,6 +174,15 @@
   @apply bg-secondary text-secondary-foreground;
 }
 
+/* Select styles */
+.select-trigger {
+  @apply focus:ring-0 focus:ring-offset-0;
+}
+
+.select-content {
+  @apply bg-background border-border z-50;
+}
+
 /* Scrollbar styles */
 ::-webkit-scrollbar {
   width: 8px;
@@ -170,9 +193,9 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/20 rounded-full;
+  @apply bg-muted-foreground bg-opacity-20 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-muted-foreground/30;
+  @apply bg-muted-foreground bg-opacity-30;
 }

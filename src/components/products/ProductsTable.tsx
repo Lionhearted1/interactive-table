@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useProducts } from '@/hooks/useProducts';
+import { useState } from "react";
+import { useProducts } from "@/hooks/useProducts";
 import {
   Table,
   TableBody,
@@ -7,9 +7,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+} from "@/components/ui/table";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -17,17 +17,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChevronLeft, ChevronRight, Eye } from 'lucide-react';
-import { ProductDetails } from './ProductDetails';
-import { Product } from '@/types/product';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+} from "lucide-react";
+import { ProductDetails } from "./ProductDetails";
+import { Product } from "@/types/product";
 
 const ITEMS_PER_PAGE_OPTIONS = [10, 20, 30];
+
+type SortField = "title" | "price" | "stock" | "rating";
+type SortOrder = "asc" | "desc";
 
 export function ProductsTable() {
   const { data, isLoading, error } = useProducts();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [sortField, setSortField] = useState<SortField>("title");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -41,10 +53,46 @@ export function ProductsTable() {
     return <div>No products found</div>;
   }
 
-  const totalPages = Math.ceil(data.products.length / itemsPerPage);
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortOrder("asc");
+    }
+  };
+
+  const sortedProducts = [...data.products].sort((a, b) => {
+    const multiplier = sortOrder === "asc" ? 1 : -1;
+    switch (sortField) {
+      case "title":
+        return multiplier * a.title.localeCompare(b.title);
+      case "price":
+        return multiplier * (a.price - b.price);
+      case "stock":
+        return multiplier * (a.stock - b.stock);
+      case "rating":
+        return multiplier * (a.rating - b.rating);
+      default:
+        return 0;
+    }
+  });
+
+  const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentItems = data.products.slice(startIndex, endIndex);
+  const currentItems = sortedProducts.slice(startIndex, endIndex);
+
+  const getSortIcon = (field: SortField) => {
+    if (sortField !== field) {
+      return <ArrowUpDown className="ml-2 h-4 w-4 text-muted-foreground/50" />;
+    }
+    return sortOrder === "asc" ? (
+      <ArrowUp className="ml-2 h-4 w-4 text-primary" />
+    ) : (
+      <ArrowDown className="ml-2 h-4 w-4 text-primary" />
+    );
+  };
 
   return (
     <Card className="overflow-hidden">
@@ -74,12 +122,44 @@ export function ProductsTable() {
       <div className="transition-all duration-300">
         <Table>
           <TableHeader>
-            <TableRow className="table-header">
+            <TableRow>
               <TableHead className="w-[100px]">Image</TableHead>
-              <TableHead>Title</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Stock</TableHead>
-              <TableHead>Brand</TableHead>
+              <TableHead
+                className="cursor-pointer"
+                onClick={() => handleSort("title")}
+              >
+                <div className="flex items-center justify-between">
+                  <span>Title</span>
+                  {getSortIcon("title")}
+                </div>
+              </TableHead>
+              <TableHead
+                className="cursor-pointer"
+                onClick={() => handleSort("price")}
+              >
+                <div className="flex items-center justify-between">
+                  <span>Price</span>
+                  {getSortIcon("price")}
+                </div>
+              </TableHead>
+              <TableHead
+                className="cursor-pointer"
+                onClick={() => handleSort("stock")}
+              >
+                <div className="flex items-center justify-between">
+                  <span>Stock</span>
+                  {getSortIcon("stock")}
+                </div>
+              </TableHead>
+              <TableHead
+                className="cursor-pointer"
+                onClick={() => handleSort("rating")}
+              >
+                <div className="flex items-center justify-between">
+                  <span>Rating</span>
+                  {getSortIcon("rating")}
+                </div>
+              </TableHead>
               <TableHead>Category</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -94,12 +174,16 @@ export function ProductsTable() {
                     className="h-12 w-12 rounded-md object-cover"
                   />
                 </TableCell>
-                <TableCell className="font-medium">{product.title}</TableCell>
+                <TableCell className="font-medium">
+                  <div className="max-w-[200px] truncate" title={product.title}>
+                    {product.title}
+                  </div>
+                </TableCell>
                 <TableCell>${product.price.toFixed(2)}</TableCell>
                 <TableCell>{product.stock}</TableCell>
-                <TableCell>{product.brand}</TableCell>
+                <TableCell>{product.rating.toFixed(1)}</TableCell>
                 <TableCell>{product.category}</TableCell>
-                <TableCell>
+                <TableCell className="text-right">
                   <Button
                     variant="ghost"
                     size="icon"
@@ -116,8 +200,8 @@ export function ProductsTable() {
       </div>
       <div className="flex items-center justify-between p-4 border-t">
         <div className="text-sm text-muted-foreground">
-          Showing {startIndex + 1} to {Math.min(endIndex, data.products.length)} of{" "}
-          {data.products.length} items
+          Showing {startIndex + 1} to {Math.min(endIndex, data.products.length)}{" "}
+          of {data.products.length} items
         </div>
         <div className="flex items-center space-x-2">
           <Button
@@ -132,7 +216,9 @@ export function ProductsTable() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
             disabled={currentPage === totalPages}
           >
             Next
@@ -149,4 +235,4 @@ export function ProductsTable() {
       )}
     </Card>
   );
-} 
+}
