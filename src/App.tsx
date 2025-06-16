@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FullScreenLoader } from './components/ui/FullScreenLoader';
 import { ProductsTable } from './components/products/ProductsTable';
+import { Header } from './components/layout/Header';
 import "./App.css"
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
   return (
     <div className="min-h-screen bg-background">
       <FullScreenLoader isLoading={isLoading} />
+      <Header />
       <main className="container mx-auto p-4">
         <ProductsTable />
       </main>
