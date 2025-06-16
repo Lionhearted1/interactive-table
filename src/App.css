@@ -1,6 +1,5 @@
 @import "tailwindcss/preflight";
-@import "tailwindcss/utilities";
-
+@tailwind utilities;
 
 @layer base {
   :root {
@@ -84,22 +83,10 @@
     --sidebar-accent-foreground: oklch(0.8074 0.0142 93.0137);
     --sidebar-border: oklch(0.9401 0 0);
     --sidebar-ring: oklch(0.7731 0 0);
-    --font-sans: Geist Mono, monospace;
-    --font-serif: Geist Mono, monospace;
-    --font-mono: Geist Mono, monospace;
-    --radius: 0.5rem;
-    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
-    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
-    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
-    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
-    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
-    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
   }
 
   * {
-    border-color: var(--border);
+    @apply border-border;
   }
 
   body {
@@ -130,56 +117,47 @@
 
 /* Force background colors for components */
 .dialog-content {
-  background-color: var(--background) !important;
-  border-color: var(--border) !important;
+  @apply bg-background border-border;
 }
 
 .select-content {
-  background-color: var(--background) !important;
-  border-color: var(--border) !important;
+  @apply bg-background border-border;
 }
 
 .card {
-  background-color: var(--background) !important;
-  border-color: var(--border) !important;
+  @apply bg-background border-border;
 }
 
 /* Header styles */
 .header {
-  background-color: var(--background) !important;
-  border-color: var(--border) !important;
+  @apply bg-background border-border;
 }
 
 /* Table styles */
 .table-header {
-  background-color: var(--muted) !important;
-  color: var(--muted-foreground) !important;
-  font-weight: 600 !important;
+  @apply bg-muted text-muted-foreground font-semibold;
 }
 
 .table-row {
-  transition: background-color 0.2s ease-in-out;
+  @apply transition-colors duration-200;
 }
 
 .table-row:hover {
-  background-color: color-mix(in oklch, var(--muted) 50%, transparent) !important;
+  @apply bg-muted/50;
 }
 
 /* Button styles */
 .button-primary {
-  background-color: var(--primary) !important;
-  color: var(--primary-foreground) !important;
+  @apply bg-primary text-primary-foreground;
 }
 
 .button-secondary {
-  background-color: var(--secondary) !important;
-  color: var(--secondary-foreground) !important;
+  @apply bg-secondary text-secondary-foreground;
 }
 
 /* Badge styles */
 .badge {
-  background-color: var(--secondary) !important;
-  color: var(--secondary-foreground) !important;
+  @apply bg-secondary text-secondary-foreground;
 }
 
 /* Scrollbar styles */
@@ -188,14 +166,13 @@
 }
 
 ::-webkit-scrollbar-track {
-  background-color: var(--muted);
+  @apply bg-muted;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: color-mix(in oklch, var(--muted-foreground) 20%, transparent);
-  border-radius: 9999px;
+  @apply bg-muted-foreground/20 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: color-mix(in oklch, var(--muted-foreground) 30%, transparent);
+  @apply bg-muted-foreground/30;
 }
