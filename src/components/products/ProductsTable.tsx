@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSort } from "@/hooks/useSort";
 import {
   Table,
@@ -67,6 +67,9 @@ export function ProductsTable({ products }: ProductsTableProps) {
   const endIndex = startIndex + itemsPerPage;
   const currentItems = sortedProducts.slice(startIndex, endIndex);
   const totalPages = Math.ceil(products.length / itemsPerPage);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [products]);
 
   return (
     <Card className="overflow-hidden">

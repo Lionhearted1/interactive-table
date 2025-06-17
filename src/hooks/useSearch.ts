@@ -158,7 +158,7 @@ export function useSearch(products: Product[]) {
     setSearchState(prev => ({
       ...prev,
       query: suggestion.text,
-      showSuggestions: false,
+      showSuggestions: true,
     }));
   };
 

@@ -60,7 +60,9 @@ export function SearchBar({
 
   const handleSuggestionClick = (suggestion: SearchSuggestion) => {
     onSuggestionSelect(suggestion);
-    inputRef.current?.focus();
+    setTimeout(() => {
+        onBlur();
+      }, 0);
   };
 
   const getSuggestionIcon = (type: SearchSuggestion['type']) => {
