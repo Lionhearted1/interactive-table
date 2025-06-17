@@ -1,54 +1,60 @@
-# React + TypeScript + Vite
+<p align="center">
+  <img src="public/logo_light.png" alt="Tabula Logo" width="1200" />
+</p>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Tabula — An interactive table
 
-Currently, two official plugins are available:
+**Tabula** is a lightweight, responsive table UI for browsing product data. It features sorting, filtering, search, and pagination — all built in React and TypeScript with a focus on clean UI and usability.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**Live demo**: [https://interactive-table-psi.vercel.app](https://interactive-table-psi.vercel.app)
+**Data source**: [https://dummyjson.com/products](https://dummyjson.com/products)
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+* Sortable columns (single & multi-column)
+* Dropdown-based filtering (e.g., by category)
+* Keyword-based fuzzy search
+* Basic pagination with next/prev navigation
+* Light and dark mode with system preference detection
+* Initial full-screen loader for aesthetic entry & perceived performance
+* Reusable components using Tailwind + shadcn/ui
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Tech Stack
+
+* **Framework**: React (with TypeScript)
+* **Styling**: Tailwind CSS & shadcn/ui
+* **Tooling**: Vite, ESLint, Prettier
+
+## Project Structure
+
+```
+├── public/                  → Static assets
+├── src/
+│   ├── components/          → UI components (table, filters, loader)
+│   ├── hooks/               → Custom hooks (fetch, theme, filters)
+│   ├── lib/                 → Utilities and helpers
+│   ├── types/               → Type definitions
+│   └── App.tsx              → Root app logic
+├── tailwind.config.ts       → Tailwind theme and config
+└── vite.config.ts           → Vite setup
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+git clone https://github.com/your-username/tabula.git
+cd tabula
+npm install
+npm run dev
 ```
+
+## Potential Enhancements
+
+* Handle offline/failed network state
+* Add CSV export/download option
+* Keyboard accessibility and ARIA improvements
+* Improve responsiveness for small viewports
+
+---
+
+This project uses a static product dataset and performs sorting, filtering, and search operations entirely in the browser.
