@@ -19,13 +19,17 @@ import {
 } from "@/components/ui/select";
 import {
   Eye,
-  ArrowUp,
-  ArrowDown,
-  ArrowUpDown,
+  RotateCcw,
+  Layers,
+
 } from "lucide-react";
 import { ProductDetails } from "./ProductDetails";
 import { Product } from "@/types/product";
-import { SortConfig } from "@/types/sortConfig";
+import { SortField } from "@/types/sortConfig";
+import { ColumnConfig } from "@/types/table";
+import { TableHeader as CustomTableHeader } from "./TableHeader";
+import { TableCell as CustomTableCell } from "./TableCell";
+import { SortControls } from "./SortControls";
 
 interface ProductsTableProps {
   products: Product[];
@@ -33,11 +37,30 @@ interface ProductsTableProps {
 
 const ITEMS_PER_PAGE_OPTIONS = [10, 20, 30];
 
+// Column configuration
+const COLUMNS: ColumnConfig[] = [
+  { field: "title", label: "Title", className: "title-col min-w-[150px]" },
+  { field: "price", label: "Price", className: "price-col" },
+  { field: "stock", label: "Stock", className: "stock-col" },
+  { field: "rating", label: "Rating", className: "rating-col" },
+  { field: "category", label: "Category", className: "category-col min-w-[120px]" },
+];
+
 export function ProductsTable({ products }: ProductsTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(ITEMS_PER_PAGE_OPTIONS[0]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const { sortConfigs, handleSort, sortData } = useSort<Product>();
+  const { 
+    sortConfigs, 
+    multiSortMode, 
+    handleSort, 
+    toggleMultiSortMode, 
+    clearSort, 
+    removeSort, 
+    moveSortPriority,
+    getSortInfo, 
+    sortData 
+  } = useSort<Product>();
 
   const sortedProducts = sortData(products);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -45,132 +68,117 @@ export function ProductsTable({ products }: ProductsTableProps) {
   const currentItems = sortedProducts.slice(startIndex, endIndex);
   const totalPages = Math.ceil(products.length / itemsPerPage);
 
-  const renderSortIcon = (field: string) => {
-    const config = sortConfigs.find((c: SortConfig) => c.field === field);
-    if (!config) return <ArrowUpDown className="h-4 w-4 text-muted-foreground/50" />;
-    
-    // Show the sort order and priority
-    const priority = sortConfigs.findIndex((c) => c.field === field) + 1;
-    return (
-      <div className="flex items-center gap-1">
-        {config.order === "asc" ? (
-          <ArrowUp className="h-4 w-4 text-accent-foreground" />
-        ) : (
-          <ArrowDown className="h-4 w-4 text-accent-foreground" />
-        )}
-        {sortConfigs.length > 1 && (
-          <span className="text-xs text-muted-foreground">{priority}</span>
-        )}
-      </div>
-    );
-  };
-
   return (
     <Card className="overflow-hidden">
-      <div className="p-4 border-b">
-        <div className="flex items-center justify-between">
+      <div className="p-4 border-b space-y-3">
+        {/* Header and Controls */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <h2 className="text-lg font-semibold">Products</h2>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Items per page:</span>
-            <Select
-              value={itemsPerPage.toString()}
-              onValueChange={(value) => {
-                setItemsPerPage(Number(value));
-                setCurrentPage(1);
-              }}
-            >
-              <SelectTrigger className="w-[100px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {ITEMS_PER_PAGE_OPTIONS.map((option) => (
-                  <SelectItem key={option} value={option.toString()}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            {/* Multi-sort toggle */}
+            <div className="flex items-center gap-2">
+              <Button
+                variant={multiSortMode ? "default" : "outline"}
+                size="sm"
+                onClick={toggleMultiSortMode}
+                className="flex items-center gap-2"
+              >
+                <Layers className="h-4 w-4" />
+                Multi-sort
+              </Button>
+              {sortConfigs.length > 0 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearSort}
+                  title="Clear all sorting"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+            
+            {/* Items per page */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground whitespace-nowrap">Items per page:</span>
+              <Select
+                value={itemsPerPage.toString()}
+                onValueChange={(value) => {
+                  setItemsPerPage(Number(value));
+                  setCurrentPage(1);
+                }}
+              >
+                <SelectTrigger className="w-[100px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {ITEMS_PER_PAGE_OPTIONS.map((option) => (
+                    <SelectItem key={option} value={option.toString()}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
+        
+        {/* Active Sorts Display */}
+        <SortControls
+          sortConfigs={sortConfigs}
+          multiSortMode={multiSortMode}
+          onToggleMultiSort={toggleMultiSortMode}
+          onClearSort={clearSort}
+          onRemoveSort={(field) => removeSort(field as SortField)}
+          onMoveSortPriority={(field, direction) => moveSortPriority(field as SortField, direction)}
+        />
+        
+        {/* Instructions */}
+        <div className="text-xs text-muted-foreground">
+          {multiSortMode 
+            ? "Multi-sort mode: Click column headers to add/modify sorts. Use priority controls to reorder."
+            : "Single-sort mode: Click column headers to sort. Enable multi-sort mode to sort by multiple columns."
+          }
+        </div>
       </div>
-      <div className="transition-all duration-300">
+      
+      <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="image-col">Image</TableHead>
-              <TableHead className="title-col">
-                <div className="flex items-center justify-between gap-2">
-                  Title
-                  <button
-                    onClick={() => handleSort("title")}
-                    className="hover:text-accent-foreground flex items-center gap-1"
-                  >
-                    {renderSortIcon("title")}
-                  </button>
-                </div>
-              </TableHead>
-              <TableHead className="price-col">
-                <div className="flex items-center justify-between gap-2">
-                  Price
-                  <button
-                    onClick={() => handleSort("price")}
-                    className="hover:text-accent-foreground flex items-center gap-1"
-                  >
-                    {renderSortIcon("price")}
-                  </button>
-                </div>
-              </TableHead>
-              <TableHead className="stock-col">
-                <div className="flex items-center justify-between gap-2">
-                  Stock
-                  <button
-                    onClick={() => handleSort("stock")}
-                    className="hover:text-accent-foreground flex items-center gap-1"
-                  >
-                    {renderSortIcon("stock")}
-                  </button>
-                </div>
-              </TableHead>
-              <TableHead className="rating-col">
-                <div className="flex items-center justify-between gap-2">
-                  Rating
-                  <button
-                    onClick={() => handleSort("rating")}
-                    className="hover:text-accent-foreground flex items-center gap-1"
-                  >
-                    {renderSortIcon("rating")}
-                  </button>
-                </div>
-              </TableHead>
-              <TableHead className="category-col">Category</TableHead>
+              {COLUMNS.map(column => (
+                <CustomTableHeader
+                  key={column.field}
+                  column={column}
+                  onSort={handleSort}
+                  sortInfo={getSortInfo(column.field)}
+                  multiSortMode={multiSortMode}
+                />
+              ))}
               <TableHead className="actions-col">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {currentItems.map((product) => (
               <TableRow key={product.id}>
-                <TableCell className={`image-col ${sortConfigs.some((c: SortConfig) => c.field === "image") ? "sorted-col" : ""}`}>
+                <TableCell className="image-col">
                   <img
                     src={product.thumbnail}
                     alt={product.title}
                     className="h-12 w-12 rounded-md object-cover"
                   />
                 </TableCell>
-                <TableCell className={`title-col ${sortConfigs.some((c: SortConfig) => c.field === "title") ? "sorted-col" : ""}`}>
-                  <div className="truncate" title={product.title}>{product.title}</div>
-                </TableCell>
-                <TableCell className={`price-col ${sortConfigs.some((c: SortConfig) => c.field === "price") ? "sorted-col" : ""}`}>
-                  ${product.price.toFixed(2)}
-                </TableCell>
-                <TableCell className={`stock-col ${sortConfigs.some((c: SortConfig) => c.field === "stock") ? "sorted-col" : ""}`}>
-                  {product.stock}
-                </TableCell>
-                <TableCell className={`rating-col ${sortConfigs.some((c: SortConfig) => c.field === "rating") ? "sorted-col" : ""}`}>
-                  {product.rating.toFixed(1)}
-                </TableCell>
-                <TableCell className={`category-col ${sortConfigs.some((c: SortConfig) => c.field === "category") ? "sorted-col" : ""}`}>
-                  <div className="truncate" title={product.category}>{product.category}</div>
-                </TableCell>
+                {COLUMNS.map(column => (
+                  <CustomTableCell
+                    key={column.field}
+                    product={product}
+                    field={column.field}
+                    column={column}
+                    sortInfo={getSortInfo(column.field)}
+                  />
+                ))}
                 <TableCell className="actions-col">
                   <Button
                     variant="ghost"
@@ -186,7 +194,8 @@ export function ProductsTable({ products }: ProductsTableProps) {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between p-4 border-t">
+      
+      <div className="flex flex-col sm:flex-row items-center justify-between p-4 border-t gap-3">
         <div className="text-sm text-muted-foreground">
           Showing {startIndex + 1} to {Math.min(endIndex, products.length)} of {products.length} items
         </div>
@@ -199,7 +208,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
           >
             Previous
           </Button>
-          <span className="text-sm">
+          <span className="text-sm px-2">
             Page {currentPage} of {totalPages}
           </span>
           <Button
