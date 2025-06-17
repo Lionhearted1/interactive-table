@@ -3,6 +3,7 @@ import { TableCellProps } from "@/types/table";
 
 export function TableCell({ product, field, column, sortInfo }: TableCellProps) {
   const cellContent = {
+    image: <img src={product.thumbnail} alt={product.title} className="w-12 h-12 object-cover rounded-md" />,
     title: <div className="truncate max-w-[200px]" title={product.title}>{product.title}</div>,
     price: <span className="font-medium">${product.price.toFixed(2)}</span>,
     stock: <span className={product.stock < 10 ? "text-destructive font-medium" : ""}>{product.stock}</span>,
