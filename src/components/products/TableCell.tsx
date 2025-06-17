@@ -14,10 +14,11 @@ export function TableCell({ product, field, column, sortInfo }: TableCellProps) 
     ),
     category: <div className="truncate max-w-[120px]" title={product.category}>{product.category}</div>,
   }[field];
+  
 
   return (
     <UITableCell 
-      className={`${column.className} ${sortInfo.active ? "bg-accent/10" : ""}`}
+      className={`${column.className} ${sortInfo.active ? "sorted-col" : ""}`}
     >
       {cellContent}
     </UITableCell>
