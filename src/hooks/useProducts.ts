@@ -11,13 +11,34 @@ export function useProducts() {
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
+        setError(null); // Clear any previous errors
+        
         const response = await axios.get<ProductsResponse>(
-          'https://dummyjson.com/products?limit=194'
+          'https://dummyjson.com/products?limit=194',
+          {
+            timeout: 10000, // 10 second timeout
+          }
         );
+        
         setData(response.data);
-        setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        let errorMessage = 'An error occurred while loading products';
+        
+        if (axios.isAxiosError(err)) {
+          if (err.code === 'ECONNABORTED') {
+            errorMessage = 'Request timeout - please check your connection';
+          } else if (err.code === 'ERR_NETWORK') {
+            errorMessage = 'Network error - please check your internet connection';
+          } else if (err.response) {
+            errorMessage = `Server error: ${err.response.status}`;
+          } else if (err.request) {
+            errorMessage = 'No response from server - please check your connection';
+          }
+        } else if (err instanceof Error) {
+          errorMessage = err.message;
+        }
+        
+        setError(errorMessage);
       } finally {
         setIsLoading(false);
       }
@@ -27,4 +48,4 @@ export function useProducts() {
   }, []);
 
   return { data, isLoading, error };
-} 
+}

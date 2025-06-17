@@ -161,36 +161,53 @@ export function ProductsTable({ products }: ProductsTableProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentItems.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell className="image-col">
-                  <img
-                    src={product.thumbnail}
-                    alt={product.title}
-                    className="h-12 w-12 rounded-md object-cover"
-                  />
-                </TableCell>
-                {COLUMNS.map(column => (
-                  <CustomTableCell
-                    key={column.field}
-                    product={product}
-                    field={column.field}
-                    column={column}
-                    sortInfo={getSortInfo(column.field)}
-                  />
-                ))}
-                <TableCell className="actions-col">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setSelectedProduct(product)}
-                  >
-                    <Eye className="h-4 w-4" />
-                    <span className="sr-only">View details</span>
-                  </Button>
+            {products.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={COLUMNS.length + 2} className="text-center py-12">
+                  <div className="flex flex-col items-center gap-4">
+                    <img
+                      src="/table.png"
+                      alt="Empty table"
+                      width={500}
+                      height={500}
+                      className="w-[500px] h-[500px] object-contain"
+                    />
+                    <p className="text-lg text-muted-foreground">WoW, an empty table!!!</p>
+                  </div>
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              currentItems.map((product) => (
+                <TableRow key={product.id}>
+                  <TableCell className="image-col">
+                    <img
+                      src={product.thumbnail}
+                      alt={product.title}
+                      className="h-12 w-12 rounded-md object-cover"
+                    />
+                  </TableCell>
+                  {COLUMNS.map(column => (
+                    <CustomTableCell
+                      key={column.field}
+                      product={product}
+                      field={column.field}
+                      column={column}
+                      sortInfo={getSortInfo(column.field)}
+                    />
+                  ))}
+                  <TableCell className="actions-col">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setSelectedProduct(product)}
+                    >
+                      <Eye className="h-4 w-4" />
+                      <span className="sr-only">View details</span>
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>
