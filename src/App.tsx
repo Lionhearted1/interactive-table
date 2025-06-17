@@ -1,5 +1,3 @@
-// src/App.tsx
-
 import { useState, useEffect } from 'react';
 import { FullScreenLoader } from './components/ui/FullScreenLoader';
 import { ProductsTable } from './components/products/ProductsTable';
@@ -10,16 +8,16 @@ import { Product } from './types/product';
 import "./App.css"
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [showInitialLoader, setShowInitialLoader] = useState(true);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const { data, isLoading: productsLoading, error } = useProducts();
 
   useEffect(() => {
-    // Simulate initial loading
+    // Show initial loader for 1.5 seconds
     const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500); // 1.5 seconds loading time
-
+      setShowInitialLoader(false);
+    }, 1500);
+    
     return () => clearTimeout(timer);
   }, []);
 
@@ -34,7 +32,10 @@ function App() {
     setFilteredProducts(products);
   };
 
-  if (productsLoading || !data?.products) {
+  // Show full screen loader during initial load OR when products are loading and we don't have data yet
+  const shouldShowFullScreenLoader = showInitialLoader || (productsLoading && !data?.products);
+
+  if (shouldShowFullScreenLoader) {
     return <FullScreenLoader isLoading={true} />;
   }
 
@@ -44,6 +45,12 @@ function App() {
         <div className="text-center space-y-2">
           <h2 className="text-lg font-semibold text-destructive">Error Loading Products</h2>
           <p className="text-muted-foreground">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+          >
+            Retry
+          </button>
         </div>
       </div>
     );
@@ -51,12 +58,11 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background">
-      <FullScreenLoader isLoading={isLoading} />
       <Header />
       <main className="container mx-auto p-4 space-y-6">
         {/* Search and Filter Section */}
         <ProductsSearch
-          products={data.products}
+          products={data?.products || []}
           onProductsChange={handleProductsChange}
         />
         
@@ -69,4 +75,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
