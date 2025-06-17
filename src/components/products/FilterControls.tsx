@@ -5,6 +5,7 @@ import { Filter, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import { Slider } from '@/components/ui/slider';
 import { FilterState, FilterOption } from '@/types/search';
 
 interface RangeSliderProps {
@@ -19,16 +20,10 @@ interface RangeSliderProps {
 function RangeSlider({ min, max, value, onChange, step = 1, label }: RangeSliderProps) {
   const [localValue, setLocalValue] = useState(value);
 
-  const handleMinChange = (newMin: number) => {
-    const newValue: [number, number] = [Math.min(newMin, localValue[1]), localValue[1]];
-    setLocalValue(newValue);
-    onChange(newValue);
-  };
-
-  const handleMaxChange = (newMax: number) => {
-    const newValue: [number, number] = [localValue[0], Math.max(newMax, localValue[0])];
-    setLocalValue(newValue);
-    onChange(newValue);
+  const handleValueChange = (newValue: number[]) => {
+    const [minVal, maxVal] = newValue;
+    setLocalValue([minVal, maxVal]);
+    onChange([minVal, maxVal]);
   };
 
   return (
@@ -40,30 +35,14 @@ function RangeSlider({ min, max, value, onChange, step = 1, label }: RangeSlider
         </span>
       </div>
       <div className="space-y-2">
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground w-8">Min:</span>
-          <input
-            type="range"
-            min={min}
-            max={max}
-            step={step}
-            value={localValue[0]}
-            onChange={(e) => handleMinChange(Number(e.target.value))}
-            className="flex-1 h-2 bg-secondary rounded-lg appearance-none cursor-pointer range-slider"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground w-8">Max:</span>
-          <input
-            type="range"
-            min={min}
-            max={max}
-            step={step}
-            value={localValue[1]}
-            onChange={(e) => handleMaxChange(Number(e.target.value))}
-            className="flex-1 h-2 bg-secondary rounded-lg appearance-none cursor-pointer range-slider"
-          />
-        </div>
+        <Slider
+          min={min}
+          max={max}
+          step={step}
+          value={localValue}
+          onValueChange={handleValueChange}
+          className="w-full"
+        />
       </div>
     </div>
   );
