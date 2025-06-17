@@ -1,4 +1,5 @@
 import { SortField } from "./sortConfig";
+import { Product } from "./product";
 
 export interface ColumnConfig {
   field: SortField;
@@ -7,7 +8,7 @@ export interface ColumnConfig {
 }
 
 export interface TableCellProps {
-  product: any;
+  product: Product;
   field: SortField;
   column: ColumnConfig;
   sortInfo: {

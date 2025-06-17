@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Layers, RotateCcw, X, ChevronUp, ChevronDown } from "lucide-react";
+import { X, ChevronUp, ChevronDown } from "lucide-react";
 import { SortConfig } from "@/types/sortConfig";
 
 interface SortControlsProps {
@@ -14,8 +13,6 @@ interface SortControlsProps {
 export function SortControls({
   sortConfigs,
   multiSortMode,
-  onToggleMultiSort,
-  onClearSort,
   onRemoveSort,
   onMoveSortPriority,
 }: SortControlsProps) {
