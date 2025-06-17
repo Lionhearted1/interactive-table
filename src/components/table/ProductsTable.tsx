@@ -140,8 +140,8 @@ export function ProductsTable({ products }: ProductsTableProps) {
         {/* Instructions */}
         <div className="text-xs text-muted-foreground">
           {multiSortMode 
-            ? "Multi-sort mode: Click column headers to add/modify sorts. Use priority controls to reorder."
-            : "Single-sort mode: Click column headers to sort. Enable multi-sort mode to sort by multiple columns."
+            ? "Multi-sort mode: Click arrows on column headers to add/modify sorts. Use priority controls to reorder."
+            : "Single-sort mode: Click arrows on column headers to sort. Enable multi-sort mode to sort by multiple columns."
           }
         </div>
       </div>
