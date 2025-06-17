@@ -91,7 +91,7 @@ export function FullScreenLoader({ isLoading, onLoadingComplete }: FullScreenLoa
         <img
           src={loadingGif}
           alt="Loading..."
-          className="h-56 w-56 sm:h-72 sm:w-72 object-contain"
+          className="h-72 w-72 sm:h-80 sm:w-80 object-contain"
           style={{ imageRendering: 'auto' }}
         />
       </div>
