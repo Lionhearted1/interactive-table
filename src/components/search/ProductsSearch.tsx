@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import { SearchBar } from './SearchBar';
-import { FilterControls } from './FilterControls';
+import { FilterControls } from '../filter/FilterControls';
 import { useSearch } from '@/hooks/useSearch';
 import { useFilters } from '@/hooks/useFilters';
 import { Product } from '@/types/product';

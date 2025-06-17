@@ -45,7 +45,9 @@ export function ProductDetails({ product, open, onOpenChange }: ProductDetailsPr
                       <img
                         src={image}
                         alt={`${product.title} ${index + 1}`}
+                        loading="eager"
                         className="h-full w-full object-cover"
+                        style={{ minHeight: '60px', minWidth: '60px' }}
                       />
                     </button>
                   ))}

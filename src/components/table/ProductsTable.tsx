@@ -29,7 +29,7 @@ import { SortField } from "@/types/sortConfig";
 import { ColumnConfig } from "@/types/table";
 import { TableHeader as CustomTableHeader } from "./TableHeader";
 import { TableCell as CustomTableCell } from "./TableCell";
-import { SortControls } from "./SortControls";
+import { SortControls } from "../sort/SortControls";
 
 interface ProductsTableProps {
   products: Product[];

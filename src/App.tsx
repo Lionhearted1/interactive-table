@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FullScreenLoader } from './components/ui/FullScreenLoader';
-import { ProductsTable } from './components/products/ProductsTable';
-import { ProductsSearch } from './components/products/ProductsSearch';
+import { ProductsTable } from './components/table/ProductsTable';
+import { ProductsSearch } from './components/search/ProductsSearch';
 import { Header } from './components/layout/Header';
 import { useProducts } from './hooks/useProducts';
 import { Product } from './types/product';
