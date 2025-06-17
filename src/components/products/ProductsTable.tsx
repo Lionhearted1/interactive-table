@@ -221,7 +221,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
             variant="outline"
             size="sm"
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
+            disabled={currentPage === 1 || products.length === 0}
           >
             Previous
           </Button>
@@ -232,7 +232,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
             variant="outline"
             size="sm"
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
+            disabled={currentPage === totalPages || products.length === 0}
           >
             Next
           </Button>
