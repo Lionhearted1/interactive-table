@@ -4,7 +4,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { useRef } from "react";
 
 export function Header() {
-  const { theme, toggleTheme } = useTheme();
+  const { toggleTheme } = useTheme();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleThemeChange = () => {

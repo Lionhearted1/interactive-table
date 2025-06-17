@@ -1,6 +1,6 @@
-@import "tailwindcss/preflight";
-@import "tailwindcss/utilities";
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   :root {
@@ -20,7 +20,7 @@
     --accent-foreground: oklch(0.2671 0.0196 98.9390);
     --destructive: oklch(0.1908 0.0020 106.5859);
     --destructive-foreground: oklch(1.0000 0 0);
-    --border: oklch(0.8847 0.0069 97.3627);
+    --border: oklch(0.7 0.01 97.3627);
     --input: oklch(0.7621 0.0156 98.3528);
     --ring: oklch(0.5937 0.1673 253.0630);
     --chart-1: oklch(0.5583 0.1276 42.9956);
@@ -84,18 +84,6 @@
     --sidebar-accent-foreground: oklch(0.8074 0.0142 93.0137);
     --sidebar-border: oklch(0.9401 0 0);
     --sidebar-ring: oklch(0.7731 0 0);
-    --font-sans: Geist Mono, monospace;
-    --font-serif: Geist Mono, monospace;
-    --font-mono: Geist Mono, monospace;
-    --radius: 0.5rem;
-    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
-    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
-    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
-    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
-    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
-    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
   }
 
   * {
@@ -130,56 +118,104 @@
 
 /* Force background colors for components */
 .dialog-content {
-  background-color: var(--background) !important;
-  border-color: var(--border) !important;
+  @apply bg-background border-border;
 }
 
 .select-content {
-  background-color: var(--background) !important;
-  border-color: var(--border) !important;
+  @apply bg-background border-border;
 }
 
 .card {
-  background-color: var(--background) !important;
-  border-color: var(--border) !important;
+  @apply bg-background border-border;
 }
 
 /* Header styles */
 .header {
-  background-color: var(--background) !important;
-  border-color: var(--border) !important;
+  @apply bg-background border-border;
 }
 
 /* Table styles */
 .table-header {
-  background-color: var(--muted) !important;
-  color: var(--muted-foreground) !important;
-  font-weight: 600 !important;
+  @apply bg-muted text-muted-foreground font-medium;
 }
 
 .table-row {
-  transition: background-color 0.2s ease-in-out;
+  @apply transition-colors duration-200 border-b border-border border-opacity-50;
 }
 
 .table-row:hover {
-  background-color: color-mix(in oklch, var(--muted) 50%, transparent) !important;
+  @apply bg-muted bg-opacity-50;
 }
 
-/* Button styles */
-.button-primary {
-  background-color: var(--primary) !important;
-  color: var(--primary-foreground) !important;
+/* Table header styles */
+[data-slot="table-header"] {
+  @apply bg-muted;
 }
 
-.button-secondary {
-  background-color: var(--secondary) !important;
-  color: var(--secondary-foreground) !important;
+[data-slot="table-head"] {
+  @apply text-muted-foreground font-medium whitespace-nowrap border-r border-border border-opacity-50 last:border-r-0;
 }
 
-/* Badge styles */
-.badge {
-  background-color: var(--secondary) !important;
-  color: var(--secondary-foreground) !important;
+[data-slot="table-head"] > div {
+  @apply flex items-center justify-between gap-2;
+}
+
+/* Column styles with fixed widths */
+.image-col {
+  @apply w-[100px] min-w-[100px] max-w-[100px] border-r border-border border-opacity-50 last:border-r-0;
+}
+
+.title-col {
+  @apply w-[300px] min-w-[300px] max-w-[300px] border-r border-border border-opacity-50 last:border-r-0;
+}
+
+.price-col {
+  @apply w-[120px] min-w-[120px] max-w-[120px] border-r border-border border-opacity-50 last:border-r-0;
+}
+
+.stock-col {
+  @apply w-[100px] min-w-[100px] max-w-[100px] border-r border-border border-opacity-50 last:border-r-0;
+}
+
+.rating-col {
+  @apply w-[120px] min-w-[120px] max-w-[120px] border-r border-border border-opacity-50 last:border-r-0;
+}
+
+.category-col {
+  @apply w-[150px] min-w-[150px] max-w-[150px] border-r border-border border-opacity-50 last:border-r-0;
+}
+
+.actions-col {
+  @apply w-[120px] min-w-[120px] max-w-[120px] border-r border-border border-opacity-50 last:border-r-0;
+}
+
+/* Sorted column styles */
+.sorted-col {
+  @apply bg-muted bg-opacity-30;
+}
+
+/* Table cell styles */
+[data-slot="table-cell"] {
+  @apply border-b border-border border-opacity-50;
+}
+
+/* Title column styles */
+.title-cell {
+  @apply truncate;
+}
+
+/* Actions column styles */
+.actions-cell {
+  @apply text-right;
+}
+
+/* Select styles */
+.select-trigger {
+  @apply focus:ring-0 focus:ring-offset-0 min-w-[120px];
+}
+
+.select-content {
+  @apply bg-background border-border z-50;
 }
 
 /* Scrollbar styles */
@@ -188,14 +224,13 @@
 }
 
 ::-webkit-scrollbar-track {
-  background-color: var(--muted);
+  @apply bg-muted;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: color-mix(in oklch, var(--muted-foreground) 20%, transparent);
-  border-radius: 9999px;
+  @apply bg-muted-foreground bg-opacity-20 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: color-mix(in oklch, var(--muted-foreground) 30%, transparent);
+  @apply bg-muted-foreground bg-opacity-30;
 }
