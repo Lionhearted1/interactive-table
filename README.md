@@ -42,7 +42,7 @@
 ## Getting Started
 
 ```bash
-git clone https://github.com/your-username/tabula.git
+git clone hhttps://github.com/Lionhearted1/interactive-table.git
 cd tabula
 npm install
 npm run dev
