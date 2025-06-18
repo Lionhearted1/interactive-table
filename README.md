@@ -42,8 +42,8 @@
 ## Getting Started
 
 ```bash
-git clone hhttps://github.com/Lionhearted1/interactive-table.git
-cd tabula
+git clone https://github.com/Lionhearted1/interactive-table.git
+cd interactive-table
 npm install
 npm run dev
 ```
