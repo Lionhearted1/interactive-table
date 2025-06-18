@@ -1,51 +1,11 @@
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/useTheme";
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 
 export function Header() {
-  const { toggleTheme } = useTheme();
+  const { toggleTheme, isDarkMode } = useTheme();
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  // Check theme from localStorage first, then system preference
-  useEffect(() => {
-    const checkTheme = () => {
-      const storedTheme = localStorage.getItem('theme');
-      
-      if (storedTheme === 'dark' || storedTheme === 'light') {
-        setIsDarkMode(storedTheme === 'dark');
-      } else {
-        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        setIsDarkMode(isDark);
-      }
-    };
-
-    checkTheme();
-
-    // Listen for localStorage changes (theme switching)
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'theme') {
-        checkTheme();
-      }
-    };
-
-    // Listen for system theme changes
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleMediaChange = (e: MediaQueryListEvent) => {
-      if (!localStorage.getItem('theme')) {
-        setIsDarkMode(e.matches);
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    mediaQuery.addEventListener('change', handleMediaChange);
-    
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      mediaQuery.removeEventListener('change', handleMediaChange);
-    };
-  }, []);
 
   const handleThemeChange = () => {
     if (buttonRef.current) {
@@ -63,15 +23,11 @@ export function Header() {
       // Toggle theme immediately for smooth transition
       toggleTheme();
       
-      // Update logo state immediately for instant switch
-      setIsDarkMode(!isDarkMode);
-      
       setTimeout(() => {
         transition.remove();
       }, 500);
     } else {
       toggleTheme();
-      setIsDarkMode(!isDarkMode);
     }
   };
 

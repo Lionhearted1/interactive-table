@@ -8,6 +8,8 @@ export function useTheme() {
     return "dark";
   });
 
+  const isDarkMode = theme === "dark";
+
   useEffect(() => {
     const root = window.document.documentElement;
     const body = window.document.body;
@@ -31,5 +33,5 @@ export function useTheme() {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
-  return { theme, toggleTheme };
+  return { theme, toggleTheme, isDarkMode };
 } 
